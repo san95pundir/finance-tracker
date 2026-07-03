@@ -16,7 +16,7 @@ const fetchGoal = async () => {
      const storedToken = localStorage.getItem('token');
     const res = await axios.get(
       `http://localhost:5000/api/savings?month=${month}&year=${year}`,
-      { headers: { Authorization: `Bearer ${storedTcdoken}` } }
+      { headers: { Authorization: `Bearer ${storedToken}` } }
     );
     console.log('Savings response:', res.data); // YEH ADD KARO
     setGoal(res.data.goal);
