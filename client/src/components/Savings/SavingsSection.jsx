@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
 import SavingsForm from './SavingsForm';
 import SavingsCard from './SavingsCard';
-
+const API_URL = process.env.REACT_APP_API_URL;
 const SavingsSection = ({ balance }) => {
   const { token } = useAuth();
   const [goal, setGoal] = useState(null);
@@ -14,10 +14,10 @@ const SavingsSection = ({ balance }) => {
 const fetchGoal = async () => {
   try {
      const storedToken = localStorage.getItem('token');
-    const res = await axios.get(
-      `http://localhost:5000/api/savings?month=${month}&year=${year}`,
-      { headers: { Authorization: `Bearer ${storedToken}` } }
-    );
+  const res = await axios.get(
+  `${API_URL}/api/savings?month=${month}&year=${year}`,
+  { headers: { Authorization: `Bearer ${storedToken}` } }
+);
     console.log('Savings response:', res.data); // YEH ADD KARO
     setGoal(res.data.goal);
   } catch (err) {

@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { PieChart, Pie, Cell, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
 import SavingsSection from '../components/Savings/SavingsSection';
 import BudgetSection from '../components/Budgets/BudgetSection';
-
+const API_URL = process.env.REACT_APP_API_URL;
 const COLORS = ['#6c63ff', '#ff6584', '#43b89c', '#f9a825', '#ef5350', '#42a5f5', '#ab47bc', '#26a69a'];
 
 const categories = ['eating', 'stationery', 'travel', 'personal', 'work', 'shopping', 'gifts', 'entertainment', 'emi_rent', 'savings'];
@@ -19,13 +19,13 @@ const Dashboard = ({ onLogout }) => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/api/transactions', {
+     const res = await axios.get(`${API_URL}/api/transactions`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTransactions(res.data.transactions);
       setSummary(res.data.summary);
 
-      const catRes = await axios.get('http://localhost:5000/api/transactions/summary', {
+      const catRes = await axios.get(`${API_URL}/api/transactions/summary`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCategorySummary(catRes.data.summary);
@@ -41,7 +41,7 @@ const Dashboard = ({ onLogout }) => {
   const handleAdd = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/transactions', form, {
+     await axios.post(`${API_URL}/api/transactions`, form, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setForm({ type: 'expense', amount: '', category: 'eating', note: '' });
@@ -54,7 +54,7 @@ const Dashboard = ({ onLogout }) => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/transactions/${id}`, {
+      await axios.delete(`${API_URL}/api/transactions/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchData();

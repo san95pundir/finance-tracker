@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
-
+const API_URL = process.env.REACT_APP_API_URL;
 const SavingsForm = ({ onSaved }) => {
   const { token } = useAuth();
   const [targetAmount, setTargetAmount] = useState('');
@@ -15,7 +15,7 @@ const SavingsForm = ({ onSaved }) => {
     setLoading(true);
     try {
       await axios.post(
-`http://localhost:5000/api/savings`,
+`${API_URL}/api/savings`,
         { month, year, targetAmount: Number(targetAmount) },
         { headers: { Authorization: `Bearer ${token}` } }
       );

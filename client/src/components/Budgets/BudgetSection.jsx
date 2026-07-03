@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from '../../context/AuthContext';
-
+const API_URL = process.env.REACT_APP_API_URL;
 const BudgetSection = ({ transactions }) => {
   const { token } = useAuth();
   const [budgets, setBudgets] = useState([]);
@@ -16,7 +16,7 @@ const fetchBudgets = async () => {
     const month = new Date().getMonth() + 1;
     const year = new Date().getFullYear();
     const res = await axios.get(
-      `http://localhost:5000/api/budgets?month=${month}&year=${year}`,
+     `${API_URL}/api/budgets?month=${month}&year=${year}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
     // limits object ko array mein convert karo
@@ -40,7 +40,7 @@ const fetchBudgets = async () => {
       const month = new Date().getMonth() + 1;
       const year = new Date().getFullYear();
       await axios.post(
-        `http://localhost:5000/api/budgets`,
+       `${API_URL}/api/budgets`,
         { category, limitAmount, month, year },
         { headers: { Authorization: `Bearer ${token}` } }
       );
