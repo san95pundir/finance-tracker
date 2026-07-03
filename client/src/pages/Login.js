@@ -12,8 +12,8 @@ const Login = ({ onSwitch }) => {
     try {
       await login(email, password);
     } catch (err) {
-      setError('Invalid email or password');
-    }
+  setError(err.response?.data?.message || 'Invalid email or password');
+}
   };
 
   return (

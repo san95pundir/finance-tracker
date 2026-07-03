@@ -13,8 +13,8 @@ const Register = ({ onSwitch }) => {
     try {
       await register(name, email, password);
     } catch (err) {
-      setError('Registration failed, try again');
-    }
+  setError(err.response?.data?.message || 'Registration failed, try again');
+}
   };
 
   return (
