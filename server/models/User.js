@@ -19,13 +19,19 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6
   },
-  monthlyIncome: {
+ monthlyIncome: {
     type: Number,
     default: 0
   },
   savingsGoal: {
     type: Number,
     default: 0
+  },
+  resetToken: {
+    type: String
+  },
+  resetTokenExpiry: {
+    type: Date
   }
 }, {
   timestamps: true

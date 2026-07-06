@@ -1,56 +1,51 @@
 import React, { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import axios from 'axios';
 import { Link } from 'react-router-dom';
-const Login = ({ onSwitch }) => {
+
+const API_URL = process.env.REACT_APP_API_URL;
+
+const ForgotPassword = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState('');
   const [error, setError] = useState('');
-  const { login } = useAuth();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage('');
+    setError('');
+    setLoading(true);
     try {
-      await login(email, password);
+      const res = await axios.post(`${API_URL}/api/auth/forgot-password`, { email });
+      setMessage(res.data.message);
     } catch (err) {
-  setError(err.response?.data?.message || 'Invalid email or password');
-}
+      setError(err.response?.data?.message || 'Something went wrong');
+    }
+    setLoading(false);
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.card}>
         <h2 style={styles.title}>💰 Finance Tracker</h2>
-        <h3 style={styles.subtitle}>Login</h3>
+        <h3 style={styles.subtitle}>Forgot Password</h3>
+        {message && <p style={styles.success}>{message}</p>}
         {error && <p style={styles.error}>{error}</p>}
         <form onSubmit={handleSubmit}>
           <input
             style={styles.input}
             type="email"
-            placeholder="Email"
+            placeholder="Enter your registered email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
- <input
-            style={styles.input}
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <p style={styles.forgotText}>
-            <Link to="/forgot-password" style={styles.link}>Forgot Password?</Link>
-          </p>
-          <button style={styles.button} type="submit">
-            Login
+          <button style={styles.button} type="submit" disabled={loading}>
+            {loading ? 'Sending...' : 'Send Reset Link'}
           </button>
         </form>
         <p style={styles.switchText}>
-          Dont have an account?{' '}
-          <span style={styles.link} onClick={onSwitch}>
-            Register here
-          </span>
+          <Link to="/" style={styles.link}>Back to Login</Link>
         </p>
       </div>
     </div>
@@ -102,27 +97,25 @@ const styles = {
     fontSize: '1rem',
     cursor: 'pointer'
   },
-error: {
+  success: {
+    color: '#43b89c',
+    textAlign: 'center',
+    marginBottom: '1rem'
+  },
+  error: {
     color: 'red',
     textAlign: 'center',
     marginBottom: '1rem'
   },
-  forgotText: {
-    textAlign: 'right',
-    marginTop: '-0.5rem',
-    marginBottom: '1rem',
-    fontSize: '0.85rem'
-  },
   switchText: {
     textAlign: 'center',
-    marginTop: '1rem',
-    color: '#666'
+    marginTop: '1rem'
   },
   link: {
     color: '#6c63ff',
-    cursor: 'pointer',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    textDecoration: 'none'
   }
 };
 
-export default Login;
+export default ForgotPassword;
