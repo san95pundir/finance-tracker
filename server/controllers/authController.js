@@ -75,8 +75,11 @@ exports.login = async (req, res) => {
 }
 exports.forgotPassword = async (req, res) => {
   try {
+    console.log('STEP 1: forgot-password route hit, email:', req.body.email);
+
     const { email } = req.body;
     const user = await User.findOne({ email });
+    console.log('STEP 2: user lookup done, found:', !!user);
 
     if (!user) {
       return res.status(404).json({ message: 'No account found with this email' });
@@ -86,8 +89,10 @@ exports.forgotPassword = async (req, res) => {
     user.resetToken = resetToken;
     user.resetTokenExpiry = Date.now() + 15 * 60 * 1000;
     await user.save();
+    console.log('STEP 3: user saved with reset token');
 
     const resetLink = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
+    console.log('STEP 4: about to send email to', user.email);
 
     await sendEmail(
       user.email,
@@ -97,12 +102,13 @@ exports.forgotPassword = async (req, res) => {
        <a href="${resetLink}">${resetLink}</a>`
     );
 
+    console.log('STEP 5: email sent successfully');
     res.status(200).json({ message: 'Reset link sent to your email' });
   } catch (error) {
+    console.log('ERROR occurred:', error.message);
     res.status(500).json({ message: error.message });
   }
 };
-
 // Reset Password
 exports.resetPassword = async (req, res) => {
   try {
